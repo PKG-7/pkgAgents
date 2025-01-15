@@ -53,7 +53,7 @@ class MessageResponse(BaseModel):
 @router.post(
     "/chat/basic",
     response_model=MessageResponse,
-    summary="Базовый чат-агентXXX",
+    summary="Базовый чат-агентX",
     description="Простой чат-бот для базового общения без специальных возможностей"
 )
 async def basic_chat(request: BasicRequest):
