@@ -1,5 +1,12 @@
 # Pydantic Agents
 
+После запуска будут доступны:
+
+-   API: http://localhost:8080
+
+-   Stoplight : http://localhost:8080/reference
+-   Документация: http://localhost:8080/docs
+
 Проект для работы с различными агентами на основе Pydantic.
 
 ## 🚀 Быстрый старт
@@ -24,14 +31,6 @@ cd pkgAgents
 ```powershell
 docker-compose up --build
 ```
-
-После запуска будут доступны:
-
--   API: http://localhost:8080
--   Веб-интерфейс: http://localhost:3001
-
--   Stoplight : http://localhost:8080/reference
--   Документация: http://localhost:8080/docs
 
 Для остановки сервисов:
 
