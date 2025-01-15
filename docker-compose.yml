@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+    app:
+        build: .
+        ports:
+            - '8000:8000' # FastAPI
+            - '3000:3000' # Веб-интерфейс
+        environment:
+            - PYTHONUNBUFFERED=1
+        env_file:
+            - .env
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:8000/docs']
+            interval: 30s
+            timeout: 10s
+            retries: 3
+        restart: unless-stopped
