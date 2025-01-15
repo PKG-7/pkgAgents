@@ -7,9 +7,6 @@ services:
             - '8080:8000' # FastAPI
         environment:
             - PYTHONUNBUFFERED=1
-            - HOST=0.0.0.0
-            - PORT=8000
-            - OLLAMA_SERVER_PATH=http://192.168.1.31:11434/v1
         volumes:
             - ./src:/app/src
         restart: unless-stopped
