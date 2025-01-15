@@ -10,6 +10,7 @@ from src.agents.isRude import AgentIsRude
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+# --- Модели запросов ---
 class BasicRequest(BaseModel):
     message: str = Field(
         description="Сообщение для обработки базовым агентом",
@@ -40,6 +41,7 @@ class IsRudeRequest(BaseModel):
         example="Проверь это сообщение"
     )
 
+# --- Модель ответа ---
 class MessageResponse(BaseModel):
     response: str = Field(
         description="Ответ от агента",
@@ -47,10 +49,10 @@ class MessageResponse(BaseModel):
     )
     metadata: Optional[Dict[str, Any]] = None
 
+# --- Базовый агент ---
 @router.post(
     "/chat/basic",
     response_model=MessageResponse,
-    tags=["Базовые чаты"],
     summary="Базовый чат-агент",
     description="Простой чат-бот для базового общения без специальных возможностей"
 )
@@ -63,10 +65,10 @@ async def basic_chat(request: BasicRequest):
         logger.error(f"Ошибка при обработке сообщения: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# --- Агент с инструментами ---
 @router.post(
     "/chat/tools",
     response_model=MessageResponse,
-    tags=["Продвинутые чаты"],
     summary="Агент с инструментами",
     description="Продвинутый чат-бот с доступом к различным инструментам и API"
 )
@@ -94,10 +96,10 @@ async def tools_chat(request: ToolsRequest):
         logger.error(f"Ошибка при обработке сообщения: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# --- Агент проверки на грубость ---
 @router.post(
     "/chat/isrude",
     response_model=MessageResponse,
-    tags=["Модерация"],
     summary="Проверка на грубость",
     description="Анализирует сообщение на предмет грубого или неприемлемого содержания"
 )
