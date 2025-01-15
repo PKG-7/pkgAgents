@@ -42,10 +42,10 @@ def get_shipping_status(order_id: str) -> str:
 
 # Создаем агента с инструментами
 AgentWithTools = Agent(
-    model=stormlabs_model('small'),
+    model=stormlabs_model('large'),
     result_type=ResponseModel,
     deps_type=OrderDetails,
-    retries=3,
+    retries=5,
     system_prompt=(
         "Ты умный агент поддержки клиентов. "
         "Внимательно анализируй запросы и используй инструменты для поиска информации. "

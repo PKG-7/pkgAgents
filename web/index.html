@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AI Agents Chat</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+                display: flex;
+                min-height: 100vh;
+                position: relative;
+            }
+            .main-container {
+                flex: 0 1 800px;
+                margin: 0 auto;
+                padding: 0 20px;
+                box-sizing: border-box;
+                width: 100%;
+                max-width: 800px;
+            }
+            #chat-container {
+                height: 400px;
+                overflow-y: auto;
+                border: 1px solid #ddd;
+                padding: 20px;
+                margin-bottom: 20px;
+                background-color: white;
+                border-radius: 5px;
+            }
+            .message {
+                margin-bottom: 10px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .user-message {
+                background-color: #e3f2fd;
+                margin-left: 20%;
+            }
+            .bot-message {
+                background-color: #f5f5f5;
+                margin-right: 20%;
+            }
+            #input-container {
+                display: flex;
+                gap: 10px;
+            }
+            #message-input {
+                flex-grow: 1;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+            button {
+                padding: 10px 20px;
+                background-color: #2196f3;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #1976d2;
+            }
+            select {
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+                width: 100%;
+            }
+            .agent-info {
+                margin-bottom: 20px;
+                padding: 15px;
+                background-color: white;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main-container">
+            <h1>AI Agents Chat</h1>
+
+            <div class="agent-info">
+                <h3>Доступные агенты</h3>
+                <select id="agent-select" onchange="handleAgentChange()">
+                    <option value="">Выберите агента...</option>
+                </select>
+            </div>
+
+            <div id="chat-container"></div>
+
+            <div id="input-container">
+                <input
+                    type="text"
+                    id="message-input"
+                    placeholder="Введите сообщение..."
+                    disabled
+                />
+                <button onclick="sendMessage()" id="send-button" disabled>
+                    Отправить
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const API_URL = 'http://localhost:8000'
+            const chatContainer = document.getElementById('chat-container')
+            const messageInput = document.getElementById('message-input')
+            const agentSelect = document.getElementById('agent-select')
+            const sendButton = document.getElementById('send-button')
+
+            // Загрузка списка агентов
+            async function loadAgents() {
+                try {
+                    const response = await fetch(`${API_URL}/agents`)
+                    const agents = await response.json()
+
+                    agents.forEach((agent) => {
+                        const option = document.createElement('option')
+                        option.value = agent
+                        option.textContent = agent
+                        agentSelect.appendChild(option)
+                    })
+                } catch (error) {
+                    console.error('Ошибка загрузки агентов:', error)
+                    addMessage('Ошибка загрузки списка агентов', false)
+                }
+            }
+
+            function handleAgentChange() {
+                const selectedAgent = agentSelect.value
+                messageInput.disabled = !selectedAgent
+                sendButton.disabled = !selectedAgent
+
+                if (selectedAgent) {
+                    addMessage(`Выбран агент: ${selectedAgent}`, false)
+                }
+            }
+
+            function addMessage(message, isUser) {
+                const messageDiv = document.createElement('div')
+                messageDiv.className = `message ${
+                    isUser ? 'user-message' : 'bot-message'
+                }`
+                messageDiv.textContent = message
+                chatContainer.appendChild(messageDiv)
+                chatContainer.scrollTop = chatContainer.scrollHeight
+            }
+
+            async function sendMessage() {
+                const message = messageInput.value.trim()
+                const selectedAgent = agentSelect.value
+
+                if (!message || !selectedAgent) return
+
+                addMessage(message, true)
+                messageInput.value = ''
+
+                try {
+                    const response = await fetch(
+                        `${API_URL}/agents/${selectedAgent}/chat`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ message }),
+                        },
+                    )
+
+                    const data = await response.json()
+                    addMessage(data.response, false)
+                } catch (error) {
+                    console.error('Ошибка отправки сообщения:', error)
+                    addMessage('Произошла ошибка при отправке сообщения', false)
+                }
+            }
+
+            messageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter' && !messageInput.disabled) {
+                    sendMessage()
+                }
+            })
+
+            // Загружаем агентов при старте
+            loadAgents()
+        </script>
+    </body>
+</html>

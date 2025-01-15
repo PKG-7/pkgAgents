@@ -5,3 +5,5 @@ uvicorn==0.23.2
 pydantic==2.10.3
 nest-asyncio==1.5.8
 pydantic-ai==0.1.0
+python-multipart==0.0.6
+typing-extensions==4.5.0
