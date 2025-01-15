@@ -1,13 +1,9 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
-
-# C extensions
+*$py.class
 *.so
-
-# Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -19,78 +15,31 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# DotEnv configuration
+# Environments
 .env
+.env.*
+!.env.example
+.venv
+env/
+venv/
+ENV/
 
-# Database
-*.db
-*.rdb
-
-# Pycharm
-.idea
-
-# VS Code
+# IDE
+.idea/
 .vscode/
-*.code-workspace
-
-# Spyder
-.spyproject/
-
-# Jupyter NB Checkpoints
-.ipynb_checkpoints/
-
-# Mac OS-specific storage files
-.DS_Store
-
-# vim
 *.swp
 *.swo
 
-# Mypy cache
-.mypy_cache/
+# Logs
+*.log
+logs/
+log/
 
-# Exclude virtual environment
-.venv/
-
-# Exclude trained models
-/models/
-
-# exclude data from source control by default
-# /data/
+# Docker
+.docker/
+docker-compose.override.yml
