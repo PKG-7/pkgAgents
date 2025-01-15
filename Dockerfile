@@ -11,8 +11,10 @@ RUN apt-get update && \
 # Клонирование репозитория
 RUN git clone https://github.com/PKG-7/pkgAgents.git .
 
-# Удаление проблемного пакета из requirements.txt
-RUN sed -i '/pydantic-ai/d' requirements.txt
+# Обновляем requirements.txt
+RUN sed -i '/pydantic-ai/d' requirements.txt && \
+    sed -i 's/typing-extensions==4.5.0/typing-extensions>=4.12.2/' requirements.txt && \
+    sed -i 's/pydantic==2.10.3/pydantic>=2.10.3/' requirements.txt
 
 # Установка зависимостей
 RUN pip install --no-cache-dir -r requirements.txt
