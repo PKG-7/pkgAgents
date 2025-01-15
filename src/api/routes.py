@@ -12,18 +12,14 @@ router = APIRouter()
 
 class BasicRequest(BaseModel):
     message: str = Field(
-        description="Сообщение для базового агента",
-        examples=[
-            "Привет, как дела?",
-            "Что ты умеешь делать?",
-            "Расскажи о себе"
-        ]
+        description="Сообщение для обработки базовым агентом",
+        example="Привет, как дела?"
     )
 
 class ToolsRequest(BaseModel):
     message: str = Field(
-        description="Сообщение для агента с инструментами",
-        examples=["Где мой заказ #12345?", "Когда доставят заказ #67890?"]
+        description="Сообщение для обработки агентом с инструментами",
+        example="Найди информацию о погоде"
     )
     order_id: str = Field(
         description="Идентификатор заказа",
@@ -41,18 +37,23 @@ class ToolsRequest(BaseModel):
 class IsRudeRequest(BaseModel):
     message: str = Field(
         description="Сообщение для проверки на грубость",
-        examples=[
-            "Ты тупой бот!",
-            "Спасибо за помощь!",
-            "Я очень расстроен качеством обслуживания"
-        ]
+        example="Проверь это сообщение"
     )
 
 class MessageResponse(BaseModel):
-    response: str
+    response: str = Field(
+        description="Ответ от агента",
+        example="Привет! У меня всё хорошо, как у тебя?"
+    )
     metadata: Optional[Dict[str, Any]] = None
 
-@router.post("/chat/basic", response_model=MessageResponse)
+@router.post(
+    "/chat/basic",
+    response_model=MessageResponse,
+    tags=["Базовые чаты"],
+    summary="Базовый чат-агент",
+    description="Простой чат-бот для базового общения без специальных возможностей"
+)
 async def basic_chat(request: BasicRequest):
     """Чат с базовым агентом"""
     try:
@@ -62,7 +63,13 @@ async def basic_chat(request: BasicRequest):
         logger.error(f"Ошибка при обработке сообщения: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/chat/tools", response_model=MessageResponse)
+@router.post(
+    "/chat/tools",
+    response_model=MessageResponse,
+    tags=["Продвинутые чаты"],
+    summary="Агент с инструментами",
+    description="Продвинутый чат-бот с доступом к различным инструментам и API"
+)
 async def tools_chat(request: ToolsRequest):
     """Чат с агентом для проверки статуса заказа"""
     try:
@@ -87,7 +94,13 @@ async def tools_chat(request: ToolsRequest):
         logger.error(f"Ошибка при обработке сообщения: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/chat/isrude", response_model=MessageResponse)
+@router.post(
+    "/chat/isrude",
+    response_model=MessageResponse,
+    tags=["Модерация"],
+    summary="Проверка на грубость",
+    description="Анализирует сообщение на предмет грубого или неприемлемого содержания"
+)
 async def isrude_chat(request: IsRudeRequest):
     """Проверка сообщения на грубость"""
     try:

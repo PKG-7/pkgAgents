@@ -1,0 +1,185 @@
+/* Стили только для темной темы */
+[data-theme='dark'] body {
+    background-color: #1e1e2e;
+}
+
+[data-theme='dark'] :root {
+    --color-canvas-50: #313244;
+    --color-canvas-100: #45475a;
+    --color-canvas-200: #585b70;
+    --color-canvas-300: #6c7086;
+    --color-canvas: #1e1e2e;
+    --color-canvas-tint: #313244;
+    --color-text: #cdd6f4;
+    --color-text-heading: #cdd6f4;
+    --color-text-paragraph: #bac2de;
+    --color-text-muted: #9399b2;
+    --color-text-primary: #89b4fa;
+    --color-canvas-pure: #11111b;
+    --color-text-light: #cdd6f4;
+}
+
+[data-theme='dark'] elements-api {
+    --elements-border-radius: 8px;
+    --elements-spacing-horizontal: 24px;
+    --elements-spacing-vertical: 24px;
+}
+
+[data-theme='dark'] .sl-overflow-y-auto {
+    color-scheme: dark;
+}
+
+[data-theme='dark'] .sl-code-highlight {
+    background-color: #313244 !important;
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] .sl-code-highlight span {
+    color: inherit !important;
+}
+
+/* Специальные стили для кнопок в темной теме */
+[data-theme='dark'] .sl-select__control,
+[data-theme='dark'] .sl-button {
+    background-color: #45475a !important;
+    border-color: #6c7086 !important;
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] .sl-select__control:hover,
+[data-theme='dark'] .sl-button:hover {
+    background-color: #585b70 !important;
+    border-color: #7f849c !important;
+}
+
+[data-theme='dark'] .sl-select__menu {
+    background-color: #313244 !important;
+    border-color: #6c7086 !important;
+}
+
+[data-theme='dark'] .sl-select__option {
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] .sl-select__option:hover {
+    background-color: #45475a !important;
+}
+
+/* Стили для кнопки Send API Request */
+[data-theme='dark'] button[data-testid='try-it-button'] {
+    background-color: #89b4fa !important;
+    border-color: #89b4fa !important;
+    color: #1e1e2e !important;
+    font-weight: 600 !important;
+}
+
+[data-theme='dark'] button[data-testid='try-it-button']:hover {
+    background-color: #b4befe !important;
+    border-color: #b4befe !important;
+}
+
+/* Стили для выпадающего списка Shell/cURL */
+[data-theme='dark'] .sl-dropdown__menu {
+    background-color: #313244 !important;
+    border-color: #6c7086 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .sl-dropdown__menu-item {
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] .sl-dropdown__menu-item:hover {
+    background-color: #45475a !important;
+}
+
+[data-theme='dark'] a {
+    color: #89b4fa !important;
+}
+
+[data-theme='dark'] a:hover {
+    color: #b4befe !important;
+}
+
+[data-theme='dark'] .sl-text-base {
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6 {
+    color: #cdd6f4 !important;
+}
+
+[data-theme='dark'] input,
+[data-theme='dark'] textarea {
+    background-color: #313244 !important;
+    color: #cdd6f4 !important;
+    border-color: #45475a !important;
+}
+
+[data-theme='dark'] .sl-bg-primary-tint {
+    background-color: #313244 !important;
+}
+
+[data-theme='dark'] .sl-code-highlight .token {
+    color: #89b4fa !important;
+}
+
+[data-theme='dark'] .sl-code-highlight .token.string {
+    color: #a6e3a1 !important;
+}
+
+[data-theme='dark'] .sl-code-highlight .token.number {
+    color: #f38ba8 !important;
+}
+
+[data-theme='dark'] .sl-code-highlight .token.keyword {
+    color: #cba6f7 !important;
+}
+
+/* Кнопка переключения темы */
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid currentColor !important;
+    background-color: transparent !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    padding: 0 !important;
+}
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+#theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+[data-theme='light'] #theme-toggle {
+    color: #0f172a !important;
+}
+
+[data-theme='dark'] #theme-toggle {
+    color: #cdd6f4 !important;
+}
+
+/* Фикс для кнопки, чтобы она всегда была поверх */
+#theme-toggle {
+    position: fixed !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
