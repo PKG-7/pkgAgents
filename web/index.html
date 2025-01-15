@@ -1,192 +1,301 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>AI Agents Chat</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 20px;
-                background-color: #f5f5f5;
-                display: flex;
-                min-height: 100vh;
-                position: relative;
-            }
-            .main-container {
-                flex: 0 1 800px;
-                margin: 0 auto;
-                padding: 0 20px;
-                box-sizing: border-box;
-                width: 100%;
                 max-width: 800px;
+                margin: 20px auto;
+                padding: 0 20px;
+                background-color: #1a1a1a;
+                color: #fff;
             }
-            #chat-container {
+            .chat-container {
+                border: 1px solid #333;
+                padding: 20px;
                 height: 400px;
                 overflow-y: auto;
-                border: 1px solid #ddd;
-                padding: 20px;
                 margin-bottom: 20px;
-                background-color: white;
-                border-radius: 5px;
+                background-color: #2a2a2a;
             }
             .message {
                 margin-bottom: 10px;
-                padding: 10px;
+                padding: 8px;
                 border-radius: 5px;
+                white-space: pre-wrap;
             }
             .user-message {
-                background-color: #e3f2fd;
+                background-color: #0056b3;
+                color: white;
                 margin-left: 20%;
             }
-            .bot-message {
-                background-color: #f5f5f5;
+            .assistant-message {
+                background-color: #333;
+                border: 1px solid #444;
                 margin-right: 20%;
+                color: #fff;
             }
-            #input-container {
+            .metadata {
+                margin-top: 20px;
+                background-color: #2d2d2d;
+                border: 1px solid #444;
+                padding: 10px;
+                border-radius: 5px;
+                font-family: monospace;
+                white-space: pre-wrap;
+            }
+            .tools-form {
+                display: none;
+                margin: 10px 0;
+                padding: 10px;
+                border: 1px solid #444;
+                border-radius: 5px;
+                background-color: #2a2a2a;
+            }
+            .tools-form input {
+                width: 100%;
+                margin-bottom: 5px;
+                background-color: #333;
+                color: #fff;
+            }
+            select,
+            button,
+            input {
+                padding: 8px;
+                margin: 5px 0;
+                border: 1px solid #444;
+                border-radius: 4px;
+                background-color: #333;
+                color: #fff;
+            }
+            select {
+                background-color: #333;
+            }
+            .input-container {
                 display: flex;
                 gap: 10px;
+                margin-top: 10px;
             }
-            #message-input {
+            .input-container input {
                 flex-grow: 1;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
             }
             button {
-                padding: 10px 20px;
-                background-color: #2196f3;
+                background-color: #0056b3;
                 color: white;
                 border: none;
-                border-radius: 5px;
                 cursor: pointer;
             }
             button:hover {
-                background-color: #1976d2;
+                background-color: #003d82;
             }
-            select {
-                padding: 10px;
-                margin-bottom: 20px;
-                border-radius: 5px;
-                border: 1px solid #ddd;
-                width: 100%;
+            .stream-toggle {
+                margin: 10px 0;
+                color: #fff;
             }
-            .agent-info {
-                margin-bottom: 20px;
-                padding: 15px;
-                background-color: white;
-                border-radius: 5px;
-                border: 1px solid #ddd;
+            ::placeholder {
+                color: #888;
+            }
+            .spinner {
+                display: none;
+                width: 50px;
+                height: 50px;
+                margin: 10px auto;
+                border: 3px solid #f3f3f3;
+                border-top: 3px solid #0056b3;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
             }
         </style>
     </head>
     <body>
-        <div class="main-container">
-            <h1>AI Agents Chat</h1>
+        <h1>AI Agents Chat</h1>
 
-            <div class="agent-info">
-                <h3>Доступные агенты</h3>
-                <select id="agent-select" onchange="handleAgentChange()">
-                    <option value="">Выберите агента...</option>
-                </select>
-            </div>
+        <select id="agentType" onchange="toggleToolsForm()">
+            <option value="basic">Базовый агент</option>
+            <option value="tools">Агент с проверкой заказа</option>
+            <option value="isrude">Агент проверки тональности</option>
+        </select>
 
-            <div id="chat-container"></div>
-
-            <div id="input-container">
-                <input
-                    type="text"
-                    id="message-input"
-                    placeholder="Введите сообщение..."
-                    disabled
-                />
-                <button onclick="sendMessage()" id="send-button" disabled>
-                    Отправить
-                </button>
-            </div>
+        <div id="toolsForm" class="tools-form">
+            <input
+                type="text"
+                id="orderId"
+                placeholder="Номер заказа (например: #12345)"
+            />
+            <input type="text" id="customerName" placeholder="Имя клиента" />
+            <input type="email" id="email" placeholder="Email клиента" />
         </div>
+
+        <div class="stream-toggle">
+            <label>
+                <input type="checkbox" id="streamMode" /> Включить потоковый режим ответов
+            </label>
+        </div>
+
+        <div id="chat" class="chat-container"></div>
+
+        <div class="input-container">
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Введите ваше сообщение..."
+            />
+            <button onclick="sendMessage()">Отправить</button>
+        </div>
+
+        <div id="spinner" class="spinner"></div>
+
+        <div id="metadata" class="metadata" style="display: none"></div>
 
         <script>
             const API_URL = 'http://localhost:8000'
-            const chatContainer = document.getElementById('chat-container')
-            const messageInput = document.getElementById('message-input')
-            const agentSelect = document.getElementById('agent-select')
-            const sendButton = document.getElementById('send-button')
+            const chat = document.getElementById('chat')
+            const messageInput = document.getElementById('messageInput')
+            const agentType = document.getElementById('agentType')
+            const streamMode = document.getElementById('streamMode')
+            const toolsForm = document.getElementById('toolsForm')
+            const metadataDiv = document.getElementById('metadata')
+            const spinner = document.getElementById('spinner')
 
-            // Загрузка списка агентов
-            async function loadAgents() {
+            function toggleToolsForm() {
+                toolsForm.style.display = agentType.value === 'tools' ? 'block' : 'none'
+            }
+
+            function showMetadata(metadata) {
+                if (metadata) {
+                    metadataDiv.style.display = 'block'
+                    metadataDiv.textContent =
+                        'Метаданные анализа:\n' + JSON.stringify(metadata, null, 2)
+                } else {
+                    metadataDiv.style.display = 'none'
+                }
+            }
+
+            function addMessage(content, isUser = false, metadata = null) {
+                const div = document.createElement('div')
+                div.className = `message ${isUser ? 'user-message' : 'assistant-message'}`
+                div.textContent = content
+                chat.appendChild(div)
+                chat.scrollTop = chat.scrollHeight
+                showMetadata(metadata)
+            }
+
+            function showSpinner() {
+                spinner.style.display = 'block'
+            }
+
+            function hideSpinner() {
+                spinner.style.display = 'none'
+            }
+
+            async function handleStream(response) {
+                const reader = response.body.getReader()
+                const decoder = new TextDecoder()
+                let messageDiv = null
+
                 try {
-                    const response = await fetch(`${API_URL}/agents`)
-                    const agents = await response.json()
+                    while (true) {
+                        const { value, done } = await reader.read()
+                        if (done) break
 
-                    agents.forEach((agent) => {
-                        const option = document.createElement('option')
-                        option.value = agent
-                        option.textContent = agent
-                        agentSelect.appendChild(option)
-                    })
-                } catch (error) {
-                    console.error('Ошибка загрузки агентов:', error)
-                    addMessage('Ошибка загрузки списка агентов', false)
+                        const chunk = decoder.decode(value)
+                        const lines = chunk.split('\n')
+
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const data = line.slice(6)
+                                if (data === '[DONE]') return
+
+                                try {
+                                    const parsed = JSON.parse(data)
+                                    const content = parsed.choices[0]?.delta?.content
+
+                                    if (content) {
+                                        if (!messageDiv) {
+                                            messageDiv = document.createElement('div')
+                                            messageDiv.className =
+                                                'message assistant-message'
+                                            chat.appendChild(messageDiv)
+                                        }
+                                        messageDiv.textContent += content
+                                        chat.scrollTop = chat.scrollHeight
+                                    }
+                                } catch (e) {
+                                    console.error('Failed to parse chunk:', e)
+                                }
+                            }
+                        }
+                    }
+                } finally {
+                    hideSpinner()
                 }
-            }
-
-            function handleAgentChange() {
-                const selectedAgent = agentSelect.value
-                messageInput.disabled = !selectedAgent
-                sendButton.disabled = !selectedAgent
-
-                if (selectedAgent) {
-                    addMessage(`Выбран агент: ${selectedAgent}`, false)
-                }
-            }
-
-            function addMessage(message, isUser) {
-                const messageDiv = document.createElement('div')
-                messageDiv.className = `message ${
-                    isUser ? 'user-message' : 'bot-message'
-                }`
-                messageDiv.textContent = message
-                chatContainer.appendChild(messageDiv)
-                chatContainer.scrollTop = chatContainer.scrollHeight
             }
 
             async function sendMessage() {
                 const message = messageInput.value.trim()
-                const selectedAgent = agentSelect.value
+                if (!message) return
 
-                if (!message || !selectedAgent) return
+                showSpinner()
 
                 addMessage(message, true)
                 messageInput.value = ''
 
-                try {
-                    const response = await fetch(
-                        `${API_URL}/agents/${selectedAgent}/chat`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ message }),
-                        },
-                    )
+                const requestData = {
+                    message,
+                    stream: streamMode.checked,
+                }
 
-                    const data = await response.json()
-                    addMessage(data.response, false)
+                if (agentType.value === 'tools') {
+                    Object.assign(requestData, {
+                        order_id: document.getElementById('orderId').value,
+                        customer_name: document.getElementById('customerName').value,
+                        email: document.getElementById('email').value,
+                    })
+                }
+
+                try {
+                    const response = await fetch(`${API_URL}/chat/${agentType.value}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestData),
+                    })
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`)
+                    }
+
+                    if (streamMode.checked) {
+                        await handleStream(response)
+                    } else {
+                        const data = await response.json()
+                        addMessage(data.response, false, data.metadata)
+                    }
                 } catch (error) {
-                    console.error('Ошибка отправки сообщения:', error)
-                    addMessage('Произошла ошибка при отправке сообщения', false)
+                    console.error('Error:', error)
+                    addMessage('Ошибка: Не удалось получить ответ от сервера')
+                } finally {
+                    hideSpinner()
                 }
             }
 
             messageInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter' && !messageInput.disabled) {
+                if (e.key === 'Enter') {
                     sendMessage()
                 }
             })
-
-            // Загружаем агентов при старте
-            loadAgents()
         </script>
     </body>
 </html>
