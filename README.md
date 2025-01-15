@@ -48,8 +48,8 @@ docker-compose up --build
 
 После запуска будут доступны:
 
--   API: http://localhost:8000
--   Веб-интерфейс: http://localhost:3000
+-   API: http://localhost:8080
+-   Веб-интерфейс: http://localhost:3001
 
 Для остановки сервисов:
 
@@ -81,7 +81,7 @@ OPENAI_API_KEY=your_api_key_here
 4. Запустите API сервер:
 
 ```powershell
-uvicorn src.api.main:app --reload
+uvicorn src.api.main:app --reload --port 8080
 ```
 
 5. В отдельном терминале запустите веб-интерфейс:
@@ -108,8 +108,8 @@ python test.py
 
 API построено на FastAPI. После запуска сервера документация доступна по адресам:
 
--   Swagger UI: http://localhost:8000/docs
--   ReDoc: http://localhost:8000/redoc
+-   Swagger UI: http://localhost:8080/docs
+-   ReDoc: http://localhost:8080/redoc
 
 ## 🔑 Переменные окружения
 

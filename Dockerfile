@@ -12,9 +12,9 @@ RUN apt-get update && \
 RUN git clone https://github.com/PKG-7/pkgAgents.git .
 
 # Обновляем requirements.txt
-RUN sed -i '/pydantic-ai/d' requirements.txt && \
-    sed -i 's/typing-extensions==4.5.0/typing-extensions>=4.12.2/' requirements.txt && \
-    sed -i 's/pydantic==2.10.3/pydantic>=2.10.3/' requirements.txt
+RUN sed -i 's/typing-extensions==4.5.0/typing-extensions>=4.12.2/' requirements.txt && \
+    sed -i 's/pydantic==2.10.3/pydantic>=2.10.3/' requirements.txt && \
+    sed -i 's/pydantic-ai==0.1.0/pydantic-ai[all]>=0.0.18/' requirements.txt
 
 # Установка зависимостей
 RUN pip install --no-cache-dir -r requirements.txt
