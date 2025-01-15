@@ -8,12 +8,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Копируем сначала requirements.txt для кэширования слоя с зависимостями
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Копируем остальные файлы проекта
+# Копируем все файлы проекта
 COPY . .
+
+# Установка зависимостей
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Открываем порт для API
 EXPOSE 8000
