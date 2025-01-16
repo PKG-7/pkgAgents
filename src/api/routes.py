@@ -13,7 +13,7 @@ router = APIRouter()
 # --- Модели запросов ---
 class BasicRequest(BaseModel):
     message: str = Field(
-        description="Сообщение для обработки базовым агентомXXX",
+        description="Сообщение для обработки базовым агентом",
         example="Привет, как дела?"
     )
 
@@ -53,7 +53,7 @@ class MessageResponse(BaseModel):
 @router.post(
     "/chat/basic",
     response_model=MessageResponse,
-    summary="Базовый чат-агентX",
+    summary="Базовый чат-агент",
     description="Простой чат-бот для базового общения без специальных возможностей"
 )
 async def basic_chat(request: BasicRequest):
